@@ -2,8 +2,61 @@
 
 """
 """
+# TODO: Disclaimer, not taking into account more than one turn per day of the
+# week yet.
 
 INPUT_FILE = ''
+
+class Turn:
+    """
+    """
+    def __init__(self, start_hour, start_minute, end_hour, end_minute):
+        self.start_hour= start_hour
+        self.start_minute = start_minute
+        self.end_hour= end_hour
+        self.end_minute = end_minute
+
+    def is_overlap(self, turn):
+    """ Checks if turns overlap based in hour and minute only
+    turn - A Turn object
+    """
+    pass
+        
+
+# TODO: Should I include the employee name in ScheduleEntry and do away with
+# Employee and encounters classes?  
+class ScheduleEntry:
+    """ Represents the day and time period a user checked in
+    """
+    def __init__(self, dow, turn):
+        """
+        dow - Day of Week
+        turn - a turn object
+        """
+        self.dow = dow
+        self.turn = turn
+
+    def is_encounter():
+        """
+        """
+        # TODO: Needs to handle military time and consider boundary cases like:
+        # 00:00 or not as the cross from one day to the other.
+        # TODO Handle repeated entries from the same employee?
+        # Need to include the employee's name in this class to do so
+        pass
+
+class EmployeeSchedule():
+    """ Per-employee Weekly Schedule
+    """
+    def __init__(self, name):
+        self.name = name
+        self.schedule = {}
+
+    def register_entry(self, entry):
+        """
+        entry - ScheduleEntry object
+        """
+        pass
 
 class Employee():
     """

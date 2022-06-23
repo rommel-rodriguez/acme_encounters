@@ -8,7 +8,7 @@ The file must conform to the format:
     RENE=MO10:15-12:00,TU10:00-12:00,TH13:00-13:15,SA14:00-18:00,SU20:00-21:00
 where the first field is the name delimited by a =, followed by at most
 seven time ranges identified by the day of week first 2 letters and the format
-of the hours must follow the military style(e.g. 18:00 instead of 6p.m.). 
+of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 """
 # TODO: Disclaimer, not taking into account more than one turn per day of the
 # week yet.
@@ -24,10 +24,10 @@ def checkfile(file_name):
         return False
     # TODO: Add more specific exceptions for common errors like
     # errors for lack of Permission to read the file
-    except BaseException as e:
+    except BaseException as err:
         # TODO: Add a more custom message 
         print("Something went wrong!: ")
-        print(e)
+        print(err)
         return False
     return True
 
@@ -47,7 +47,9 @@ class Turn:
     def __init__(self, start_hour, start_minute, end_hour, end_minute):
         """
         start_hour - An integer number between 0 and 23
-        start_minute - An integer number between 0 and 59 
+        start_minute - An integer number between 0 and 59
+        end_hour - An integer number between 0 and 23
+        end_minute - An integer number between 0 and 59
         """
         # TODO: Add testing for invalid hours
         self.start_hour= start_hour
@@ -65,13 +67,13 @@ class Turn:
         other_turn - A Turn object
         returns False if there is no overlap, and True if there is
         """
-        # TODO: Not taking into account ilogical time frames like a case in 
+        # TODO: Not taking into account ilogical time frames like a case in
         # and employee checks-in and -out immediately
         # Note: if's logic separated into 2 to improve readability
         if (self.start_hour >= other_turn.end_hour and
             self.start_minute >= other_turn.end_minute):
             return False
-        elif (self.end_hour <= other_turn.start_hour and
+        if (self.end_hour <= other_turn.start_hour and
             self.end_minute <= other_turn.start_minute):
             return False
         return True
@@ -82,14 +84,15 @@ class Turn:
         return  msg.format(self = self)
 
     def __eq__(self, other):
-        return (self.start_hour == other.start_hour and 
-                self.start_minute == other.start_minute and 
-                self.end_hour == other.end_hour and 
+        return (self.start_hour == other.start_hour and
+                self.start_minute == other.start_minute and
+                self.end_hour == other.end_hour and
                 self.end_minute == other.end_minute )
-        
+
+
 class Employee():
     """ Represents an ACME Employee
-    name - String 
+    name - String
     """
     def __init__(self, name):
         self.name = name
@@ -101,7 +104,7 @@ class Employee():
         return self.name
 
 # TODO: Should I include the employee name in ScheduleEntry and do away with
-# Employee and encounters classes?  
+# Employee and encounters classes?
 class ScheduleEntry:
     """ Represents a single employee's turn in a week
     Characterized by an employee object, day of the week and the time frame
@@ -140,7 +143,7 @@ class ScheduleEntry:
 
 
 class EmployeeEncountersParser():
-    """ Contains all schedules of all employees 
+    """ Contains all schedules of all employees
     """
     def __init__(self, file_name):
         # TODO: WARNING: This structure is incompatible with the rest of the design
@@ -198,11 +201,6 @@ class EmployeeEncountersParser():
                     entry = ScheduleEntry(emp, dow, emp_turn)
                     self.entry_dict[dow].append(entry)
 
-    def register_entry(self, entry):
-        """
-        entry - ScheduleEntry object
-        """
-        pass
 
     def enter_new_file(self, new_file_name):
         """ Takes care of processing more than 1 input file"""
@@ -217,9 +215,7 @@ class EmployeeEncountersParser():
         # TODO: WARNING: This is the problem, this loop is at worst
         # of order n, making the total O(n^2)
         # TODO: First Compare with entries in same day, the append
-        for dow in self.entry_dict.keys():
-            dow_elist = self.entry_dict[dow] # This shouldn't generate a copy
-            # print(dow_elist)
+        for dow,dow_elist in self.entry_dict.items():
             dl = len(dow_elist)
             for i in range(dl-1) :
                 cur_ent = dow_elist[i]
@@ -230,8 +226,6 @@ class EmployeeEncountersParser():
                         pair_list.sort()
                         pair_key = tuple(pair_list)
                         self.table[pair_key] = self.table.get(pair_key, 0) + 1
-        # TODO: WARNING: Too many nested loops, try to move some out
-
 
 
 def main():

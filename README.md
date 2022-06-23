@@ -61,7 +61,17 @@ Several OOP concepts have been used, mainly for code isolation and readability.
     which is the desired output table.
 
 ## Approach
-Some basic assumptions were made and some common error were handled
+It was decided to store the ScheduleEntry objects inside the entry_dic, each
+in a list exclusive to that day, so that finding overlaps was more efficient,
+as we no longer have to compare with entries from different days.
+
+The functionality in the EmployeeEncountersParser.generate_table method could
+have been included in the EmployeeEncountersParser._parse_input_file method,
+but doing so only helps the performance a little and the complexity is not 
+changed. On the other hand breaking the code this way, makes it easier to follow.
+
+Some basic assumptions were made and some common error were handled:
+
 ### Assumptions:
 
     - The input file follows the same format that the provided
@@ -78,6 +88,9 @@ Some basic assumptions were made and some common error were handled
 - Agile practices were used when developing this program, with focus on testing
 by providing as test harness wth a test skeleton of the expected functionality of
 initial prototype functions.
+
+- Documentation has been provided by means of Python doc-strings and this
+README file.
 
 - The GIT program was used for source control, always with a 'dev' branch that was
 forked when needed for feature-specific development, when ready they were merged

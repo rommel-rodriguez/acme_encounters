@@ -1,4 +1,8 @@
  TODOs: 
     - Test that 'rb' works on windows as well
     - Add more specific exceptions for common errors like
-      errors for lack of Permission to read the file
+       errors for lack of Permission to read the file
+    - Handle repeated entries from the same employee?
+       Need to include the employee's name in this class to do so.
+    - Must support already existing table
+    - Consider adding some input test here

@@ -69,7 +69,7 @@ Some basic assumptions were made and some common error were handled
 ### Handling of common error:
 
     - Input-file-related errors were somewhat handled, specific handling of 
-    FileNotFound, skipped specific handling of permission related error 
+        FileNotFound, skipped specific handling of permission related error 
     , tho they are still reported to the user and terminate the program. 
     - Skip processing of lines of input file that are blank 
     - Skip addition of entries that raise any kind of exception while processing

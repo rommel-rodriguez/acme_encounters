@@ -22,7 +22,7 @@ def checkfile(file_name):
         print(f"[ERROR] File '{file_name}' not found in given path")
         return False
     except BaseException as err:
-        # TODO: Add a more custom message 
+        # TODO: Add a more custom message
         print("Something went wrong!: ")
         print(err)
         return False
@@ -106,9 +106,7 @@ class Turn:
         other_turn - A Turn object
         returns False if there is no overlap, and True if there is
         """
-        # TODO: Not taking into account ilogical time frames like a case in
-        # and employee checks-in and -out immediately
-        # Note: if's logic separated into 2 to improve readability
+
         if (self.start_time >= other_turn.end_time or
             self.end_time <= other_turn.start_time):
             return False
@@ -149,8 +147,7 @@ class Employee():
     def __str__(self):
         return self.name
 
-# TODO: Should I include the employee name in ScheduleEntry and do away with
-# Employee and encounters classes?
+
 class ScheduleEntry:
     """ Represents a single employee's turn in a week
     Characterized by an employee object, day of the week and the time frame
@@ -167,16 +164,12 @@ class ScheduleEntry:
         self.turn = turn
 
     def is_encounter(self, sentry):
-        """ Checks if there is a schedule overlap(encounter) between employees 
+        """ Checks if there is a schedule overlap(encounter) between employees
         sentry - A ScheduleEntry type object
         """
-        # TODO: Needs to handle military time and consider boundary cases like:
-        # 00:00 or not as the cross from one day to the other.
-        # TODO Handle repeated entries from the same employee?
-        # Need to include the employee's name in this class to do so
         if self.emp == sentry.emp:
             return False
-        # TODO: Depending on the logic consider removing the dow to dow test
+
         return self.dow == sentry.dow and self.turn.is_overlap(sentry.turn)
 
     def __str__(self):
@@ -192,8 +185,6 @@ class EmployeeEncountersParser():
     """ Contains all schedules of all employees
     """
     def __init__(self, file_name):
-        # TODO: WARNING: This structure is incompatible with the rest of the design
-        # re-think and find a consensus
         """ file_name - str name of a appropiately formate file"""
 
         self.entry_dict = {'MO':[], 'TU':[],
@@ -212,7 +203,6 @@ class EmployeeEncountersParser():
          (str, int, int, int ,int)
         """
         sched_list = []
-        # TODO: Surround everything below here in try except
         turns_list = sched_str.strip().split(',')
         # At most 7 iterations here
         for t in turns_list:
@@ -221,13 +211,10 @@ class EmployeeEncountersParser():
                 dow = t[:2]
                 tup += (dow, )
                 hours_list = t[2:].strip().split('-')
-                # TODO: Careful here
+                # NOTE: Careful here
                 start_list, end_list = (h.strip().split(':') for h in hours_list)
-                # TODO: Handle Exceptions in case h can not be casted
-                # TODO: Add control to skip out-of-bound hour and minute
                 tup += (int(start_list[0]), int(start_list[1]))
                 tup += (int(end_list[0]), int(end_list[1]))
-                # TODO: Test which one is more efficient
                 sched_list.append(tup)
             except BaseException as err:
                 # print(f"[ERROR] Malformed Turn string :{t}")
@@ -242,7 +229,7 @@ class EmployeeEncountersParser():
         Already assumes that the file exists and is readable
         """
         with open(self.file_name, 'rb') as sched_file:
-            for emp_line in sched_file: 
+            for emp_line in sched_file:
                 emp_line = emp_line.strip().decode('utf8')
                 if not emp_line:
                     continue
@@ -272,12 +259,7 @@ class EmployeeEncountersParser():
 
     def generate_table(self):
         """ Generates the output table and assigns it to attribute table """
-        # TODO: Must support already existing table
-        # TODO: Consider prepending _ to the parse_input_file method
         self._parse_input_file()
-        # TODO: WARNING: This is the problem, this loop is at worst
-        # of order n, making the total O(n^2)
-        # TODO: First Compare with entries in same day, the append
         for dow,dow_elist in self.entry_dict.items():
             dl = len(dow_elist)
             for i in range(dl-1) :
@@ -303,5 +285,4 @@ def main():
         print(f"Terminating Process due to problems reading the file: {file_name}")
 
 if __name__ == '__main__':
-    # TODO: Consider adding some input test here
     main()

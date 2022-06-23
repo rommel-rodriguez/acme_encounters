@@ -198,6 +198,8 @@ class EmployeeEncountersParser():
     def __init__(self, file_name):
         # TODO: WARNING: This structure is incompatible with the rest of the design
         # re-think and find a consensus
+        """ file_name - str name of a appropiately formate file"""
+
         self.entry_dict = {'MO':[], 'TU':[],
                            'WE':[], 'TH':[],
                            'FR':[], 'SA':[],
@@ -216,7 +218,7 @@ class EmployeeEncountersParser():
         sched_list = []
         # TODO: Surround everything below here in try except
         turns_list = sched_str.strip().split(',')
-        # At most 7 loops here
+        # At most 7 iterations here
         for t in turns_list:
             tup = tuple()
             try:
@@ -246,6 +248,8 @@ class EmployeeEncountersParser():
         with open(self.file_name, 'rb') as sched_file:
             for emp_line in sched_file: 
                 emp_line = emp_line.strip().decode('utf8')
+                if not emp_line:
+                    continue
                 emp_name, sched_str = emp_line.split('=')
                 emp_name = emp_name.upper()
                 emp = Employee(emp_name)

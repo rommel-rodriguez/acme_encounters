@@ -125,7 +125,6 @@ class Turn:
 
 
     def __str__(self):
-        # msg = f"{self.start_hour}:{self.start_minute}-{self.end_hour}:{self.end_minute}"
         msg = "{self.start_hour}:{self.start_minute}-{self.end_hour}:{self.end_minute}"
         return  msg.format(self = self)
 

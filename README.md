@@ -86,6 +86,8 @@ Some basic assumptions were made and some common error were handled:
 
     - The input file follows the same format that the provided
     - There will not be repeated entries in the file for the same user 
+    - When an Employee's turn has the exact start and end time, it is considered
+      an error while recording in the database/file, but it is still processed
 ### Handling of common errors:
 
     - Input-file-related errors were somewhat handled, specific handling of 

@@ -11,6 +11,8 @@ class EncountersTestCase(unittest.TestCase):
         emp_name3='EDWARD'
         emp_name4='WENDY'
         self.en = encounters
+
+
         a_stime = self.en.BoundaryTime(20,30)
         a_etime = self.en.BoundaryTime(21,45)
         b_stime = self.en.BoundaryTime(20,25)
@@ -44,6 +46,27 @@ class EncountersTestCase(unittest.TestCase):
                                'WE':[], 'TH':[],
                                'FR':[], 'SA':[],
                                'SU':[]}
+        self.generated_table = {('CHARLES', 'EDWARD'): 1}
+
+    def test_is_valid_time(self):
+        """ Tests encounters.BoundaryTime.is_valid_time method """
+        inv_time1 = self.en.BoundaryTime(100,30)
+        inv_time2 = self.en.BoundaryTime(-20,30)
+        inv_time3 = self.en.BoundaryTime(20,70)
+        val_time1 = self.en.BoundaryTime(20,30)
+        self.assertFalse(inv_time1.is_valid_time())
+        self.assertFalse(inv_time2.is_valid_time())
+        self.assertFalse(inv_time3.is_valid_time())
+        self.assertTrue(val_time1.is_valid_time())
+
+    def test_is_valid_turn(self):
+        """ Tests encounters.Turn.is_valid_turn method """
+        atime = self.en.BoundaryTime(20,30)
+        btime = self.en.BoundaryTime(21,45)
+        inv_turn = self.en.Turn(btime, atime )
+        val_turn = self.en.Turn(atime, btime)
+        self.assertFalse(inv_turn.is_valid_turn())
+        self.assertTrue(val_turn.is_valid_turn())
 
     def test_checkfile(self):
         """ Sets the filenames to test the checkfile function
@@ -89,8 +112,11 @@ class EncountersTestCase(unittest.TestCase):
         self.assertDictEqual(self.expected_dict1, parser1.entry_dict)
 
     def test_generate_table(self):
-        """ """
-        pass
+        """ Tests EmployeeEncountersParser.generate_table method """
+        parser = self.en.EmployeeEncountersParser('./test_files/dummy_input1.txt')
+        parser.generate_table()
+        # self.en.print_table(parser1.table)
+        self.assertEqual(parser.table, self.generated_table)
 
 
 if __name__ == '__main__':

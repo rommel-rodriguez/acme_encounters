@@ -10,8 +10,6 @@ where the first field is the name delimited by a =, followed by at most
 seven time ranges identified by the day of week first 2 letters and the format
 of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 """
-# TODO: Disclaimer, not taking into account more than one turn per day of the
-# week yet.
 
 def checkfile(file_name):
     """ Check if we can open and read a file named file_name(str) """
@@ -22,7 +20,6 @@ def checkfile(file_name):
         print(f"[ERROR] File '{file_name}' not found in given path")
         return False
     except BaseException as err:
-        # TODO: Add a more custom message
         print("Something went wrong!: ")
         print(err)
         return False
@@ -87,6 +84,8 @@ class BoundaryTime:
 
 class Turn:
     """ Represent a working turn, with an start and end hour and minute
+    start_time - A BoundaryTime Object
+    end_time - A BoundaryTime Object
     """
     def __init__(self, start_time, end_time):
         """
@@ -99,12 +98,13 @@ class Turn:
     def is_overlap(self, other_turn):
         """ Checks if turns overlap based in hour and minute only
 
+        other_turn - A Turn object
+        returns False if there is no overlap, and True if there is
+
         Boundary cases do not count as overlaps, if the end hour and minute
         of a turn coincides exactly with the start hour and minute of another
         turn if does not count as an overlap
 
-        other_turn - A Turn object
-        returns False if there is no overlap, and True if there is
         """
 
         if (self.start_time >= other_turn.end_time or
@@ -237,6 +237,7 @@ class EmployeeEncountersParser():
                     emp_name, sched_str = emp_line.split('=')
                 except ValueError:
                     continue
+
                 emp_name = emp_name.upper()
                 emp = Employee(emp_name)
                 sched_list  = self._parse_schedule_string(sched_str)
@@ -250,12 +251,6 @@ class EmployeeEncountersParser():
                         continue
                     entry = ScheduleEntry(emp, dow, emp_turn)
                     self.entry_dict[dow].append(entry)
-
-
-    def enter_new_file(self, new_file_name):
-        """ Takes care of processing more than 1 input file"""
-        self.file_name = new_file_name
-        self.generate_table()
 
     def generate_table(self):
         """ Generates the output table and assigns it to attribute table """

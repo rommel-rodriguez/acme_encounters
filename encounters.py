@@ -14,7 +14,7 @@ of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 # week yet.
 
 def checkfile(file_name):
-    """ Check if we can open and read a file named file_name """
+    """ Check if we can open and read a file named file_name(str) """
     try:
         # TODO: Test that 'rb' works on windows as well
         fh = open(file_name, 'rb')
@@ -40,22 +40,65 @@ def print_table(result_table):
     for key, value in sorted(result_table.items()):
         print(f"{key[0]}-{key[1]}:\t{value}")
 
+class BoundaryTime:
+    """ Represents a specific time's Hour and Minute
+    Must be able to tell if the time is valid military time
+    """
+    def __init__(self, hour, minute):
+        """
+        hour - an int type object
+        minute - an int type object
+        """
+        self.hour = hour
+        self.minute = minute
+
+    def __ge__(self, other):
+        if other.hour > self.hour:
+            return False
+
+        if  other.hour < self.hour:
+            return True
+
+        return self.minute >= other.minute
+
+    def __le__(self, other):
+        if other.hour > self.hour:
+            return True
+
+        if  other.hour < self.hour:
+            return False
+
+        return self.minute <= other.minute
+
+    def __lt__(self, other):
+        if self.hour < other.hour:
+            return True
+
+        if self.hour > other.hour:
+            return False
+
+        return self.minute < other.minute
+
+    def __eq__(self, other):
+        return (self.hour == other.hour and self.minute == other.minute )
+
+    def is_valid_time(self):
+        """ Validates that hour and minute is whithin sane boundaries """
+        return (self.hour >= 0 and self.hour <= 23
+                and self.minute >= 0 and self.minute <= 59)
+
 
 class Turn:
     """ Represent a working turn, with an start and end hour and minute
     """
-    def __init__(self, start_hour, start_minute, end_hour, end_minute):
+    def __init__(self, start_time, end_time):
         """
-        start_hour - An integer number between 0 and 23
-        start_minute - An integer number between 0 and 59
-        end_hour - An integer number between 0 and 23
-        end_minute - An integer number between 0 and 59
+        start_time - A BoundaryTime Object
+        end_time - A BoundaryTime Object
         """
         # TODO: Add testing for invalid hours
-        self.start_hour= start_hour
-        self.start_minute = start_minute
-        self.end_hour= end_hour
-        self.end_minute = end_minute
+        self.start_time = start_time
+        self.end_time = end_time
 
     def is_overlap(self, other_turn):
         """ Checks if turns overlap based in hour and minute only
@@ -70,13 +113,22 @@ class Turn:
         # TODO: Not taking into account ilogical time frames like a case in
         # and employee checks-in and -out immediately
         # Note: if's logic separated into 2 to improve readability
-        if (self.start_hour >= other_turn.end_hour and
-            self.start_minute >= other_turn.end_minute):
+        if (self.start_time >= other_turn.end_time or
+            self.end_time <= other_turn.start_time):
             return False
-        if (self.end_hour <= other_turn.start_hour and
-            self.end_minute <= other_turn.start_minute):
-            return False
+
         return True
+
+    def is_valid_turn(self):
+        """ Checks whether the start time is lower or equal to end time """
+        # NOTE: If the start and end times are equal, it is assumed that there
+        # was an input error when writing the records, but is stil accepted
+        # as is useful for logging, but out-of-bounds times are not accepted
+        if not (self.start_time.is_valid_time()
+                and self.end_time.is_valid_time()):
+            return False
+        return self.start_time <= self.end_time
+
 
     def __str__(self):
         # msg = f"{self.start_hour}:{self.start_minute}-{self.end_hour}:{self.end_minute}"
@@ -84,10 +136,8 @@ class Turn:
         return  msg.format(self = self)
 
     def __eq__(self, other):
-        return (self.start_hour == other.start_hour and
-                self.start_minute == other.start_minute and
-                self.end_hour == other.end_hour and
-                self.end_minute == other.end_minute )
+        return (self.start_time == other.start_time and
+                self.end_time == other.end_time)
 
 
 class Employee():
@@ -121,7 +171,7 @@ class ScheduleEntry:
         self.turn = turn
 
     def is_encounter(self, sentry):
-        """
+        """ Checks if there is a schedule overlap(encounter) between employees 
         sentry - A ScheduleEntry type object
         """
         # TODO: Needs to handle military time and consider boundary cases like:
@@ -164,21 +214,27 @@ class EmployeeEncountersParser():
          (str, int, int, int ,int)
         """
         sched_list = []
+        # TODO: Surround everything below here in try except
         turns_list = sched_str.strip().split(',')
         # At most 7 loops here
         for t in turns_list:
             tup = tuple()
-            dow = t[:2]
-            tup += (dow, )
-            hours_list = t[2:].strip().split('-')
-            # TODO: Careful here
-            start_list, end_list = (h.strip().split(':') for h in hours_list)
-            # TODO: Handle Exceptions in case h can not be casted
-            # TODO: Add control to skip out-of-bound hour and minute
-            tup += (int(start_list[0]), int(start_list[1]))
-            tup += (int(end_list[0]), int(end_list[1]))
-            # TODO: Test which one is more efficient
-            sched_list.append(tup)
+            try:
+                dow = t[:2]
+                tup += (dow, )
+                hours_list = t[2:].strip().split('-')
+                # TODO: Careful here
+                start_list, end_list = (h.strip().split(':') for h in hours_list)
+                # TODO: Handle Exceptions in case h can not be casted
+                # TODO: Add control to skip out-of-bound hour and minute
+                tup += (int(start_list[0]), int(start_list[1]))
+                tup += (int(end_list[0]), int(end_list[1]))
+                # TODO: Test which one is more efficient
+                sched_list.append(tup)
+            except BaseException as err:
+                # print(f"[ERROR] Malformed Turn string :{t}")
+                # print(err)
+                continue
 
         return sched_list
 
@@ -197,7 +253,11 @@ class EmployeeEncountersParser():
                 # At most 7 loops
                 for tf in sched_list:
                     dow = tf[0]
-                    emp_turn = Turn(*tf[1:])
+                    start_time = BoundaryTime(*tf[1:3])
+                    end_time = BoundaryTime(*tf[3:])
+                    emp_turn = Turn(start_time, end_time)
+                    if not emp_turn.is_valid_turn():
+                        continue
                     entry = ScheduleEntry(emp, dow, emp_turn)
                     self.entry_dict[dow].append(entry)
 
@@ -229,6 +289,7 @@ class EmployeeEncountersParser():
 
 
 def main():
+    """ Function to execute when script is called as __main__ """
     file_name = input('Enter Employee schedule file: ').strip()
 
     if checkfile(file_name):

@@ -12,7 +12,7 @@
 1. `python3 ./test_encounters.py`
 
 To test encounters.py automatically with all the files under test_files there 
-is a bash and expect scripts called test.sh and test.exp repectively. The script
+is a bash and expect scripts called test.sh and test.exp respectively. The script
 needs the expect command/package to be installed. Runs test_encounters.py first.
 On Ubuntu derivatives:
 
@@ -38,7 +38,7 @@ Several OOP concepts have been used, mainly for code isolation and readability.
     than the upper boundary)
 
 3. The Employee class was created for optimization, all the ScheduleEntry
-    objects for particular employee will point to the same Employee object.
+    objects for a particular employee will point to the same Employee object.
 
 4. The ScheduleEntry object is composed of
     - emp - a Employee object
@@ -60,7 +60,7 @@ Several OOP concepts have been used, mainly for code isolation and readability.
     employee's name has been removed
     - _parse_input_file - Loops through the file line by line and fills the 
     entry_dict dictionary, calls _parse_schedule_string.
-    - generate_table - First calls  _parse_input_file then iterates throught
+    - generate_table - First calls  _parse_input_file then iterates through
     entry_dict and then each entry per day-of-week list, looking and registering
     encounters/schedule overlaps between pairs of employees and storing them in
     the table attribute.
@@ -72,7 +72,7 @@ Several OOP concepts have been used, mainly for code isolation and readability.
 ## Approach
 It was decided to store the ScheduleEntry objects inside the entry_dic, each
 in a list exclusive to that day, so that finding overlaps was more efficient,
-as we no longer have to compare with entries from different days.
+as we no longer have to compare entries from different days.
 
 The functionality in the EmployeeEncountersParser.generate_table method could
 have been included in the EmployeeEncountersParser._parse_input_file method,
@@ -85,17 +85,17 @@ Some basic assumptions were made and some common error were handled:
 
     - The input file follows the same format that the provided
     - There will not be repeated entries in the file for the same user 
-### Handling of common error:
+### Handling of common errors:
 
     - Input-file-related errors were somewhat handled, specific handling of 
-        FileNotFound, skipped specific handling of permission related error 
-    , tho they are still reported to the user and terminate the program. 
+      FileNotFound, skipped specific handling of permission related error,
+      though they are still reported to the user and terminate the program. 
     - Skip processing of lines of input file that are blank 
     - Skip addition of entries that raise any kind of exception while processing
 
 ## Methodology
 - Agile practices were used when developing this program, with focus on testing
-by providing as test harness wth a test skeleton of the expected functionality of
+by providing a test harness with a test skeleton of the expected functionality of
 initial prototype functions.
 
 - Documentation has been provided by means of Python doc-strings and this
@@ -106,12 +106,12 @@ forked when needed for feature-specific development, when ready they were merged
 back to dev, then dev was merged back to main. Only the main branch and version
 tags were pushed to the remote.
 
-- Specific-feature branchs were rebased as needed when other feature branchs
-were successfuly merged to dev.
+- Specific-feature branches were rebased as needed when other feature branches
+were successfully merged to dev.
 
 - The code was refactored a few times to improve maintainability and readability
 
 - The code refactored code was then tested after the feature-branch merge
 
-- The program was continously tested after merges from feature branchs using
+- The program was continuously tested after merges from feature branches using
 the test harness as well as the sample and dummy files.

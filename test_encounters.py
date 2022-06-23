@@ -54,7 +54,7 @@ class EncountersTestCase(unittest.TestCase):
         # the files that must exists and files with restricted read
         # permissons
 
-        f_exists = "./sample_input1.txt"
+        f_exists = "./test_files/sample_input1.txt"
         fnot_exists = "./non_existent.txt"
         self.assertTrue(self.en.checkfile(f_exists))
         self.assertFalse(self.en.checkfile(fnot_exists))
@@ -83,7 +83,7 @@ class EncountersTestCase(unittest.TestCase):
 
     def test_parse_input_file(self):
         """ Tests the EmployeeeEncounterParser.test_parse_input_file """
-        parser1 = self.en.EmployeeEncountersParser('dummy_input1.txt')
+        parser1 = self.en.EmployeeEncountersParser('./test_files/dummy_input1.txt')
         parser1._parse_input_file()
         # parser2 = self.en.EmployeeEncountersParser('dummy_input2.txt')
         self.assertDictEqual(self.expected_dict1, parser1.entry_dict)

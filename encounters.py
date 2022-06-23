@@ -228,9 +228,9 @@ class EmployeeEncountersParser():
         """ Takes care of the initial parsing of the input file
         Already assumes that the file exists and is readable
         """
-        with open(self.file_name, 'rb') as sched_file:
+        with open(self.file_name, 'r', encoding='utf-8') as sched_file:
             for emp_line in sched_file:
-                emp_line = emp_line.strip().decode('utf8')
+                emp_line = emp_line.strip()
                 if not emp_line:
                     continue
                 try:

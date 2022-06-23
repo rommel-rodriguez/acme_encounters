@@ -10,7 +10,7 @@ if ! which expect; then
     exit 1
 fi
 
-for file in test_files/*; do
+for file in test_files/*.txt; do
     echo "==========> TESTING ${file} <=========="
     expect "test.exp" "${file}"
 done

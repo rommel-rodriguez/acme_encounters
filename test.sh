@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+echo "######################### Unittesting #########################"
+python3 test_encounters.py
+echo "####################### END Unittesting #######################"
 
 if ! which expect; then
     echo "expect package not installed!"

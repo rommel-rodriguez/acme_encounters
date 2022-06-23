@@ -6,10 +6,19 @@
 ## How to run on Linux:
 1. `git clone https://github.com/rommel-rodriguez/acme_encounters.git /some/path`
 2. `cd /some/path`
-3. `python3 ./encounters.py`
+3. `python3 encounters.py`
 
 ## How to test
 1. `python3 ./test_encounters.py`
+
+To test encounters.py automatically with all the files under test_files there 
+is a bash and expect scripts called test.sh and test.exp repectively. The script
+needs the expect command/package to be installed. Runs test_encounters.py first.
+On Ubuntu derivatives:
+
+1. `apt install expect`
+1. `bash test.sh`
+
 
 ## Overview
 

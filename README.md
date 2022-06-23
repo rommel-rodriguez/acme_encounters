@@ -1,6 +1,7 @@
 # Count Employee Encounters 
 
 **Using any kind of external library(or import) was avoided in the encounters.py script**
+
 **Testing done with unittest**
 
 ## How to run on Linux:

@@ -61,17 +61,35 @@ Several OOP concepts have been used, mainly for code isolation and readability.
     which is the desired output table.
 
 ## Approach
+Some basic assumptions were made and some common error were handled
+### Assumptions:
+
+    - The input file follows the same format that the provided
+    - There will not be repeated entries in the file for the same user 
+### Handling of common error:
+
+    - Input-file-related errors were somewhat handled, specific handling of 
+    FileNotFound, skipped specific handling of permission related error 
+    , tho they are still reported to the user and terminate the program. 
+    - Skip processing of lines of input file that are blank 
+    - Skip addition of entries that raise any kind of exception while processing
+
 ## Methodology
 - Agile practices were used when developing this program, with focus on testing
 by providing as test harness wth a test skeleton of the expected functionality of
 initial prototype functions.
 
-- The program was continously tested after merges from feature branchs using
-the test harness as well as the sample and dummy files.
-
 - The GIT program was used for source control, always with a 'dev' branch that was
 forked when needed for feature-specific development, when ready they were merged
 back to dev, then dev was merged back to main. Only the main branch and version
 tags were pushed to the remote.
+
 - Specific-feature branchs were rebased as needed when other feature branchs
 were successfuly merged to dev.
+
+- The code was refactored a few times to improve maintainability and readability
+
+- The code refactored code was then tested after the feature-branch merge
+
+- The program was continously tested after merges from feature branchs using
+the test harness as well as the sample and dummy files.

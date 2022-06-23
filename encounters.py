@@ -16,14 +16,11 @@ of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 def checkfile(file_name):
     """ Check if we can open and read a file named file_name(str) """
     try:
-        # TODO: Test that 'rb' works on windows as well
         fh = open(file_name, 'rb')
         fh.close()
     except FileNotFoundError:
         print(f"[ERROR] File '{file_name}' not found in given path")
         return False
-    # TODO: Add more specific exceptions for common errors like
-    # errors for lack of Permission to read the file
     except BaseException as err:
         # TODO: Add a more custom message 
         print("Something went wrong!: ")
@@ -96,7 +93,6 @@ class Turn:
         start_time - A BoundaryTime Object
         end_time - A BoundaryTime Object
         """
-        # TODO: Add testing for invalid hours
         self.start_time = start_time
         self.end_time = end_time
 
@@ -250,7 +246,10 @@ class EmployeeEncountersParser():
                 emp_line = emp_line.strip().decode('utf8')
                 if not emp_line:
                     continue
-                emp_name, sched_str = emp_line.split('=')
+                try:
+                    emp_name, sched_str = emp_line.split('=')
+                except ValueError:
+                    continue
                 emp_name = emp_name.upper()
                 emp = Employee(emp_name)
                 sched_list  = self._parse_schedule_string(sched_str)

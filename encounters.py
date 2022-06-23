@@ -42,7 +42,7 @@ def print_table(result_table):
 
 
 class Turn:
-    """
+    """ Represent a working turn, with an start and end hour and minute
     """
     def __init__(self, start_hour, start_minute, end_hour, end_minute):
         """
@@ -88,7 +88,8 @@ class Turn:
                 self.end_minute == other.end_minute )
         
 class Employee():
-    """
+    """ Represents an ACME Employee
+    name - String 
     """
     def __init__(self, name):
         self.name = name
@@ -177,6 +178,7 @@ class EmployeeEncountersParser():
             # print(start_list)
             # print(end_list)
             # TODO: Handle Exceptions in case h can not be casted
+            # TODO: Add control to skip out-of-bound hour and minute
             tup += (int(start_list[0]), int(start_list[1]))
             tup += (int(end_list[0]), int(end_list[1]))
             # TODO: Test which one is more efficient

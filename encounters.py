@@ -162,29 +162,19 @@ class EmployeeEncountersParser():
         """
         sched_list = []
         turns_list = sched_str.strip().split(',')
-        # sched_list = [ [(t[:2],ss, es ) for t in turns_list] for  ]
         # At most 7 loops here
-        # TODO: Try to apply some more List Comprehensions here
         for t in turns_list:
             tup = tuple()
             dow = t[:2]
             tup += (dow, )
             hours_list = t[2:].strip().split('-')
-            # start_list = hours_list[0].strip().split(':')
-            # end_list = hours_list[1].strip().split(':')
             # TODO: Careful here
             start_list, end_list = (h.strip().split(':') for h in hours_list)
-            # print(dow)
-            # print(start_list)
-            # print(end_list)
             # TODO: Handle Exceptions in case h can not be casted
             # TODO: Add control to skip out-of-bound hour and minute
             tup += (int(start_list[0]), int(start_list[1]))
             tup += (int(end_list[0]), int(end_list[1]))
             # TODO: Test which one is more efficient
-            # tup += (int(s) for s in start_list)
-            # tup += (int(s) for s in end_list)
-            # print(tup)
             sched_list.append(tup)
 
         return sched_list
@@ -206,18 +196,6 @@ class EmployeeEncountersParser():
                     dow = tf[0]
                     emp_turn = Turn(*tf[1:])
                     entry = ScheduleEntry(emp, dow, emp_turn)
-                    # print(entry)
-                    # TODO: WARNING: This is the problem, this loop is at worst
-                    # of order n, making the total O(n^2)
-                    # TODO: First Compare with entries in same day, the append
-                    # for ent in self.entry_dict[dow]:
-                    #     other_turn = ent.turn
-                    #     if emp_turn.is_overlap(other_turn):
-                    #         # TODO: Add logic to handle name1-name2, name2-name1
-                    #         # as equal in the dictionary and only use one form
-                    #         pass
-                    #     pass
-                    # TODO: WARNING: Too many nested loops, try to move some out
                     self.entry_dict[dow].append(entry)
 
     def register_entry(self, entry):
@@ -236,12 +214,6 @@ class EmployeeEncountersParser():
         # TODO: Must support already existing table
         # TODO: Consider prepending _ to the parse_input_file method
         self._parse_input_file()
-        # print([ (str(i),str(j)) for i,j in  self.entry_dict.items()]) 
-        # print(self.entry_dict)
-        # for i,j in self.entry_dict.items(): 
-        #     for it in j:
-        #         print(it)
-            
         # TODO: WARNING: This is the problem, this loop is at worst
         # of order n, making the total O(n^2)
         # TODO: First Compare with entries in same day, the append
@@ -254,10 +226,6 @@ class EmployeeEncountersParser():
                 for j in range(i+1, dl):
                     test_ent = dow_elist[j]
                     if cur_ent.is_encounter(test_ent):
-                        # print(f"cur_ent:{cur_ent}\ntest_ent:{test_ent}")
-                        # print(type(cur_ent.emp.name))
-                        # print(cur_ent.emp.name)
-                        # print(test_ent.emp.name)
                         pair_list = [cur_ent.emp.name, test_ent.emp.name]
                         pair_list.sort()
                         pair_key = tuple(pair_list)

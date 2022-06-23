@@ -4,6 +4,7 @@ import unittest
 import encounters
 
 class EncountersTestCase(unittest.TestCase):
+    # maxDiff = None
     def setUp(self):
         emp_name1='CHARLES'
         emp_name2='MARIAN'
@@ -29,7 +30,7 @@ class EncountersTestCase(unittest.TestCase):
         self.expected_list2 = [('MO', 9, 30, 10, 0),('TH', 5,30,6,0),
                                ('SU',21,30,23,59)]
         self.expected_dict1 = {'MO':[self.entry1, self.entry3, self.entry4],
-                               'TU':[self.entry4],
+                               'TU':[self.entry2],
                                'WE':[], 'TH':[],
                                'FR':[], 'SA':[],
                                'SU':[]}
@@ -75,6 +76,15 @@ class EncountersTestCase(unittest.TestCase):
         parser1 = self.en.EmployeeEncountersParser('dummy_input1.txt')
         parser1._parse_input_file()
         # parser2 = self.en.EmployeeEncountersParser('dummy_input2.txt')
+        for key,elist in parser1.entry_dict.items(): 
+            for e in elist:
+                # if key=='MO' and e.emp.name=='CHARLES':
+                #     print(e.emp.name)
+                print(e)
+        print('#####################################')
+        for key,elist in self.expected_dict1.items(): 
+            for e in elist:
+                print(e)
         self.assertDictEqual(self.expected_dict1, parser1.entry_dict)
 
     def test_generate_table(self):

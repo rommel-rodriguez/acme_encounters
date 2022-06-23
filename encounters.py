@@ -31,6 +31,16 @@ def checkfile(file_name):
         return False
     return True
 
+
+def print_table(result_table):
+    """ Prints the result table for the final output
+    result_table - a dictionary with a two-element tuple as key
+                   and an int as value
+    """
+    for key, value in result_table.items():
+        print(f"{key[0]}-{key[1]}:\t{value}")
+
+
 class Turn:
     """
     """
@@ -70,6 +80,12 @@ class Turn:
         # msg = f"{self.start_hour}:{self.start_minute}-{self.end_hour}:{self.end_minute}"
         msg = "{self.start_hour}:{self.start_minute}-{self.end_hour}:{self.end_minute}"
         return  msg.format(self = self)
+
+    def __eq__(self, other):
+        return (self.start_hour == other.start_hour and 
+                self.start_minute == other.start_minute and 
+                self.end_hour == other.end_hour and 
+                self.end_minute == other.end_minute )
         
 class Employee():
     """
@@ -115,6 +131,11 @@ class ScheduleEntry:
 
     def __str__(self):
         return "{self.emp}={self.dow}{self.turn}".format(self = self)
+
+    def __eq__(self, other):
+        return (self.emp  == other.emp and
+                self.dow == other.dow and
+                self.turn == other.turn)
 
 
 class EmployeeEncountersParser():
@@ -249,7 +270,7 @@ def main():
     if checkfile(file_name):
         parser = EmployeeEncountersParser(file_name)
         parser.generate_table()
-        print(parser.table)
+        print_table(parser.table)
     else:
         print(f"Terminating Process due to problems reading the file: {file_name}")
 

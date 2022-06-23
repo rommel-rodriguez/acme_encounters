@@ -37,7 +37,7 @@ def print_table(result_table):
     result_table - a dictionary with a two-element tuple as key
                    and an int as value
     """
-    for key, value in result_table.items():
+    for key, value in sorted(result_table.items()):
         print(f"{key[0]}-{key[1]}:\t{value}")
 
 

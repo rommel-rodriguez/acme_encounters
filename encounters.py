@@ -12,6 +12,7 @@ of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 """
 
 import argparse
+import sys
 from datetime import time
 
 def parse_cmd():
@@ -34,6 +35,9 @@ def checkfile(file_name):
         fh.close()
     except FileNotFoundError:
         print(f"[ERROR] File '{file_name}' not found in given path")
+        return False
+    except IsADirectoryError:
+        print(f"[ERROR] '{file_name}' is a directory not a file")
         return False
     except BaseException as err:
         print("Something went wrong!: ")
@@ -295,13 +299,19 @@ def main():
     """ Function to execute when script is called as __main__ """
     # file_name = input('Enter Employee schedule file: ').strip()
     file_name = parse_cmd()
+    if not file_name:
+        print("encounters.py needs an argument:")
+        print("\tencounters.py -f FILENAME")
+        sys.exit(1)
 
+    file_name = file_name.strip()
     if checkfile(file_name):
         sched_parser = EmployeeEncountersParser(file_name)
         sched_parser.generate_table()
         print_table(sched_parser.table)
     else:
         print(f"Terminating Process due to problems reading the file: {file_name}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

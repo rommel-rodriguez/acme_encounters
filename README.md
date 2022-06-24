@@ -23,7 +23,7 @@ On Ubuntu derivatives:
 
 ## Overview
 
-The program prompts the user for an input file name or file path, and outputs
+The user provides the program of , and outputs
 a table that represents the number of encounters/schedule overlaps between two
 ACME employees per table row. The rows are sorted using the names of the first
 column as key.

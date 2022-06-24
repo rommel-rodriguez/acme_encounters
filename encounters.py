@@ -16,6 +16,8 @@ import sys
 from datetime import time
 
 def parse_cmd():
+    """Takes care of parsing command line arguments
+    """
     desc = "Counter of encounters of pairs of employees in the office"
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('-f', '--filename',

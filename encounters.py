@@ -12,7 +12,9 @@ of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 """
 
 def checkfile(file_name):
-    """ Check if we can open and read a file named file_name(str) """
+    """ Check if we can open and read a file named file_name(str)
+    file_name : str
+    """
     try:
         fh = open(file_name, 'rb')
         fh.close()
@@ -28,7 +30,7 @@ def checkfile(file_name):
 
 def print_table(result_table):
     """ Prints the result table for the final output
-    result_table - a dictionary with a two-element tuple as key
+    result_table : dictionary with a two-element tuple as key
                    and an int as value
     """
     for key, value in sorted(result_table.items()):
@@ -37,11 +39,27 @@ def print_table(result_table):
 class BoundaryTime:
     """ Represents a specific time's Hour and Minute
     Must be able to tell if the time is valid military time
+
+    Attributes
+    ----------
+    hour : int
+        time's hour
+    minute : int
+        time's minute
+
+    Methods
+    -------
+    is_valid_time()
+        Validates hour and minute
     """
     def __init__(self, hour, minute):
         """
-        hour - an int type object
-        minute - an int type object
+        Parameters
+        ----------
+        hour : int
+            time's hour 
+        minute : int
+            time's minute 
         """
         self.hour = hour
         self.minute = minute
@@ -84,13 +102,28 @@ class BoundaryTime:
 
 class Turn:
     """ Represent a working turn, with an start and end hour and minute
-    start_time - A BoundaryTime Object
-    end_time - A BoundaryTime Object
+    Attributes
+    ----------
+    start_time :  BoundaryTime
+        Represents the  tarting time
+    end_time :  BoundaryTime Object
+        Represents the end of the turn
+
+    Methods
+    -------
+    is_overlap()
+        Checks if turns overlap based in hour and minute only
+    is_valid_turn()
+        Checks whether the start time is lower or equal to end time
     """
     def __init__(self, start_time, end_time):
         """
-        start_time - A BoundaryTime Object
-        end_time - A BoundaryTime Object
+        Parameters
+        ----------
+        start_time :  BoundaryTime
+            Represents the  tarting time
+        end_time :  BoundaryTime Object
+            Represents the end of the turn
         """
         self.start_time = start_time
         self.end_time = end_time
@@ -98,7 +131,7 @@ class Turn:
     def is_overlap(self, other_turn):
         """ Checks if turns overlap based in hour and minute only
 
-        other_turn - A Turn object
+        other_turn : Turn object
         returns False if there is no overlap, and True if there is
 
         Boundary cases do not count as overlaps, if the end hour and minute
@@ -135,7 +168,10 @@ class Turn:
 
 class Employee():
     """ Represents an ACME Employee
-    name - String
+    Attributes
+    ----------
+    name : str
+        Employee's name
     """
     def __init__(self, name):
         self.name = name
@@ -151,12 +187,30 @@ class ScheduleEntry:
     """ Represents a single employee's turn in a week
     Characterized by an employee object, day of the week and the time frame
     in which he/she was at the office
+    Attributes
+    ----------
+    emp : Employee
+        Represents the owner of this entry
+    dow : str
+        Day of Week as a two-character string
+    turn : Turn
+        Represents the time frame of this entry
+
+    Methods
+    -------
+    is_encounter()
+        Checks if there is a schedule overlap(encounter) between employees
     """
     def __init__(self, emp, dow, turn):
         """
-        emp - A Employee object
-        dow - Day of Week as a two-character string
-        turn - a Turn object
+        Parameters
+        ----------
+        emp : Employee
+            Represents the owner of this entry
+        dow : str
+            Day of Week as a two-character string
+        turn : Turn
+            Represents the time frame of this entry
         """
         self.emp = emp
         self.dow = dow
@@ -164,7 +218,8 @@ class ScheduleEntry:
 
     def is_encounter(self, sentry):
         """ Checks if there is a schedule overlap(encounter) between employees
-        sentry - A ScheduleEntry type object
+        sentry : ScheduleEntry type
+            Another  ScheduleEntry object to compare with
         """
         if self.emp == sentry.emp:
             return False
@@ -182,9 +237,28 @@ class ScheduleEntry:
 
 class EmployeeEncountersParser():
     """ Contains all schedules of all employees
+    Attributes
+    ----------
+    entry_dict : dict
+        Keys are 2-letter string and values and list of ScheduleEntry
+        objects
+    file_name : str
+        Input file name or path
+    table : dict
+        Keys are 2-element tuples representing employee names, the values
+        are the number of schedule overlaps between the 2
+
+    Methods
+    -------
+    _parse_schedule_string(str)
+        Parses a string in a know format and outputs a list of tuples
+    _parse_input_file()
+        Takes care of the initial parsing of the input file
+    generate_table()
+        Generates the output table and assigns it to attribute table
     """
     def __init__(self, file_name):
-        """ file_name - str name of a appropiately formate file"""
+        """ file_name : str, name of a appropiately formate file"""
 
         self.entry_dict = {'MO':[], 'TU':[],
                            'WE':[], 'TH':[],
@@ -196,7 +270,8 @@ class EmployeeEncountersParser():
 
     def _parse_schedule_string(self, sched_str):
         """ Parses a string in a know format and outputs a list of tuples
-
+        sched_str : str
+            Represents an input line with the username and = sign removed
         Returns a list of tuples, each with five elements representing
          (dow, start_hour, start_minute, end_hour, end_minute ) ->
          (str, int, int, int ,int)
@@ -210,7 +285,6 @@ class EmployeeEncountersParser():
                 dow = t[:2]
                 tup += (dow, )
                 hours_list = t[2:].strip().split('-')
-                # NOTE: Careful here
                 start_list, end_list = (h.strip().split(':') for h in hours_list)
                 tup += (int(start_list[0]), int(start_list[1]))
                 tup += (int(end_list[0]), int(end_list[1]))

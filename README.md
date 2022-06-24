@@ -11,33 +11,35 @@ Where FILENAME should be replaced by the name of the input file with the
 employee schedules.
 
 ## How to test
-1. `python3 ./test_encounters.py`
+- `python3 ./test_encounters.py`
 
 To test encounters.py automatically with all the files under test_files there 
-is a bash and expect scripts called test.sh and test.exp respectively. The script
-needs the expect command/package to be installed. Runs test_encounters.py first.
-On Ubuntu derivatives:
+is a bash script called test.sh. The script needs the expect command/package
+to be installed. Runs test_encounters.py first.
 
-1. `bash test.sh`
+On GNU/Linux:
+
+- `bash test.sh`
 
 
 ## Overview
 
-The user provides the program of , and outputs
-a table that represents the number of encounters/schedule overlaps between two
-ACME employees per table row. The rows are sorted using the names of the first
-column as key.
+The user provides the program of a filename via command line, and the program 
+outputs a table that represents the number of encounters/schedule overlaps
+between two ACME employees per table row. The rows are sorted using the names
+of the first column as key.
 
 ## Architecture 
 
-Several OOP concepts have been used, mainly for code isolation and readability.
+Several OOP concepts have been used, mainly for code/logic isolation 
+and readability.
 
-1. Turn is composed of 2 datetime.time attributes an takes care to check
-    that a turn is actually valid (e.g. that the lower boundary is lower or equal
-    than the upper boundary)
+1. The class Turn is composed of 2 datetime.time attributes an takes care to
+   check that a turn is actually valid (e.g. that the lower boundary is lower
+   or equal than the upper boundary).
 
 2. The Employee class was created for optimization, all the ScheduleEntry
-    objects for a particular employee will point to the same Employee object.
+   objects for a particular employee will point to the same Employee object.
 
 3. The ScheduleEntry object is composed of
     - emp - a Employee object
@@ -69,6 +71,7 @@ Several OOP concepts have been used, mainly for code isolation and readability.
     which is the desired output table.
 
 ## Approach
+
 It was decided to store the ScheduleEntry objects inside the entry_dic, each
 in a list exclusive to that day, so that finding overlaps was more efficient,
 as we no longer have to compare entries from different days.
@@ -83,7 +86,9 @@ Some basic assumptions were made and some common error were handled:
 ### Assumptions:
 
     - The input file follows the same format that the provided
-    - There will not be repeated entries in the file for the same user 
+    - There will not be repeated entries in the file for the same user, although
+      the program can handle this cases, there is no specific policy to resolve
+      conflicting schedules, in the same day for the same user.
     - When an Employee's turn has the exact start and end time, it is considered
       an error while recording in the database/file, but it is still processed
 ### Handling of common errors:
@@ -95,6 +100,7 @@ Some basic assumptions were made and some common error were handled:
     - Skip addition of entries that raise any kind of exception while processing
 
 ## Methodology
+
 - Agile practices were used when developing this program, with focus on testing
 by providing a test harness with a test skeleton of the expected functionality of
 initial prototype functions.

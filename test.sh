@@ -12,5 +12,5 @@ fi
 
 for file in test_files/*.txt; do
     echo "==========> TESTING ${file} <=========="
-    expect "test.exp" "${file}"
+    python3 "./encounters.py" -f "${file}"
 done

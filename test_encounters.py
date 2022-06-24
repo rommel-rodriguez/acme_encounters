@@ -1,6 +1,7 @@
 """ Test harness file for functionality in encounters.py
 """
 import unittest
+from datetime import time
 import encounters
 
 class EncountersTestCase(unittest.TestCase):
@@ -12,17 +13,16 @@ class EncountersTestCase(unittest.TestCase):
         emp_name4='WENDY'
         self.en = encounters
 
-
-        a_stime = self.en.BoundaryTime(20,30)
-        a_etime = self.en.BoundaryTime(21,45)
-        b_stime = self.en.BoundaryTime(20,25)
-        b_etime = self.en.BoundaryTime(20,30)
-        c_stime = self.en.BoundaryTime(21,30)
-        c_etime = self.en.BoundaryTime(22,30)
-        d_stime = self.en.BoundaryTime(20,30)
-        d_etime = self.en.BoundaryTime(21,45)
-        e_stime = self.en.BoundaryTime(18,30)
-        e_etime = self.en.BoundaryTime(19,00)
+        a_stime = time(20,30)
+        a_etime = time(21,45)
+        b_stime = time(20,25)
+        b_etime = time(20,30)
+        c_stime = time(21,30)
+        c_etime = time(22,30)
+        d_stime = time(20,30)
+        d_etime = time(21,45)
+        e_stime = time(18,30)
+        e_etime = time(19,00)
         self.a_turn = self.en.Turn(a_stime, a_etime)
         self.b_turn = self.en.Turn(b_stime, b_etime)
         self.c_turn = self.en.Turn(c_stime, c_etime)
@@ -48,21 +48,11 @@ class EncountersTestCase(unittest.TestCase):
                                'SU':[]}
         self.generated_table = {('CHARLES', 'EDWARD'): 1}
 
-    def test_is_valid_time(self):
-        """ Tests encounters.BoundaryTime.is_valid_time method """
-        inv_time1 = self.en.BoundaryTime(100,30)
-        inv_time2 = self.en.BoundaryTime(-20,30)
-        inv_time3 = self.en.BoundaryTime(20,70)
-        val_time1 = self.en.BoundaryTime(20,30)
-        self.assertFalse(inv_time1.is_valid_time())
-        self.assertFalse(inv_time2.is_valid_time())
-        self.assertFalse(inv_time3.is_valid_time())
-        self.assertTrue(val_time1.is_valid_time())
 
     def test_is_valid_turn(self):
         """ Tests encounters.Turn.is_valid_turn method """
-        atime = self.en.BoundaryTime(20,30)
-        btime = self.en.BoundaryTime(21,45)
+        atime = time(20,30)
+        btime = time(21,45)
         inv_turn = self.en.Turn(btime, atime )
         val_turn = self.en.Turn(atime, btime)
         self.assertFalse(inv_turn.is_valid_turn())

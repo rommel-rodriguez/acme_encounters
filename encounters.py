@@ -11,6 +11,20 @@ seven time ranges identified by the day of week first 2 letters and the format
 of the hours must follow the military style(e.g. 18:00 instead of 6p.m.).
 """
 
+import argparse
+from datetime import time
+
+def parse_cmd():
+    desc = "Counter of encounters of pairs of employees in the office"
+    parser = argparse.ArgumentParser(description=desc)
+    parser.add_argument('-f', '--filename',
+                        type=str,
+                        help="Input file with the Employee schedules")
+
+    args = parser.parse_args()
+
+    return args.filename
+
 def checkfile(file_name):
     """ Check if we can open and read a file named file_name(str)
     file_name : str
@@ -27,7 +41,6 @@ def checkfile(file_name):
         return False
     return True
 
-
 def print_table(result_table):
     """ Prints the result table for the final output
     result_table : dictionary with a two-element tuple as key
@@ -36,77 +49,13 @@ def print_table(result_table):
     for key, value in sorted(result_table.items()):
         print(f"{key[0]}-{key[1]}:\t{value}")
 
-class BoundaryTime:
-    """ Represents a specific time's Hour and Minute
-    Must be able to tell if the time is valid military time
-
-    Attributes
-    ----------
-    hour : int
-        time's hour
-    minute : int
-        time's minute
-
-    Methods
-    -------
-    is_valid_time()
-        Validates hour and minute
-    """
-    def __init__(self, hour, minute):
-        """
-        Parameters
-        ----------
-        hour : int
-            time's hour 
-        minute : int
-            time's minute 
-        """
-        self.hour = hour
-        self.minute = minute
-
-    def __ge__(self, other):
-        if other.hour > self.hour:
-            return False
-
-        if  other.hour < self.hour:
-            return True
-
-        return self.minute >= other.minute
-
-    def __le__(self, other):
-        if other.hour > self.hour:
-            return True
-
-        if  other.hour < self.hour:
-            return False
-
-        return self.minute <= other.minute
-
-    def __lt__(self, other):
-        if self.hour < other.hour:
-            return True
-
-        if self.hour > other.hour:
-            return False
-
-        return self.minute < other.minute
-
-    def __eq__(self, other):
-        return (self.hour == other.hour and self.minute == other.minute )
-
-    def is_valid_time(self):
-        """ Validates that hour and minute is whithin sane boundaries """
-        return (self.hour >= 0 and self.hour <= 23
-                and self.minute >= 0 and self.minute <= 59)
-
-
 class Turn:
     """ Represent a working turn, with an start and end hour and minute
     Attributes
     ----------
-    start_time :  BoundaryTime
+    start_time : datetime.time
         Represents the  tarting time
-    end_time :  BoundaryTime Object
+    end_time :  datetime.time
         Represents the end of the turn
 
     Methods
@@ -120,9 +69,9 @@ class Turn:
         """
         Parameters
         ----------
-        start_time :  BoundaryTime
+        start_time :  datetime.time
             Represents the  tarting time
-        end_time :  BoundaryTime Object
+        end_time : datetime.time
             Represents the end of the turn
         """
         self.start_time = start_time
@@ -151,9 +100,7 @@ class Turn:
         # NOTE: If the start and end times are equal, it is assumed that there
         # was an input error when writing the records, but is stil accepted
         # as is useful for logging, but out-of-bounds times are not accepted
-        if not (self.start_time.is_valid_time()
-                and self.end_time.is_valid_time()):
-            return False
+
         return self.start_time <= self.end_time
 
 
@@ -317,8 +264,11 @@ class EmployeeEncountersParser():
                 # At most 7 loops
                 for tf in sched_list:
                     dow = tf[0]
-                    start_time = BoundaryTime(*tf[1:3])
-                    end_time = BoundaryTime(*tf[3:])
+                    try:
+                        start_time = time(*tf[1:3])
+                        end_time = time(*tf[3:])
+                    except ValueError:
+                        continue
                     emp_turn = Turn(start_time, end_time)
                     if not emp_turn.is_valid_turn():
                         continue
@@ -343,12 +293,13 @@ class EmployeeEncountersParser():
 
 def main():
     """ Function to execute when script is called as __main__ """
-    file_name = input('Enter Employee schedule file: ').strip()
+    # file_name = input('Enter Employee schedule file: ').strip()
+    file_name = parse_cmd()
 
     if checkfile(file_name):
-        parser = EmployeeEncountersParser(file_name)
-        parser.generate_table()
-        print_table(parser.table)
+        sched_parser = EmployeeEncountersParser(file_name)
+        sched_parser.generate_table()
+        print_table(sched_parser.table)
     else:
         print(f"Terminating Process due to problems reading the file: {file_name}")
 

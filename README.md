@@ -1,13 +1,14 @@
 # Count Employee Encounters 
 
-**Using any kind of external library(or import) was avoided in the encounters.py script**
-
 **Testing done with unittest**
 
 ## How to run on Linux:
-1. `git clone https://github.com/rommel-rodriguez/acme_encounters.git /some/path`
-2. `cd /some/path`
-3. `python3 encounters.py`
+1. `git clone https://github.com/rommel-rodriguez/acme_encounters.git`
+2. `cd acme_encounters`
+3. `python3 encounters.py -f FILENAME`
+
+Where FILENAME should be replaced by the name of the input file with the 
+employee schedules.
 
 ## How to test
 1. `python3 ./test_encounters.py`
@@ -17,7 +18,6 @@ is a bash and expect scripts called test.sh and test.exp respectively. The scrip
 needs the expect command/package to be installed. Runs test_encounters.py first.
 On Ubuntu derivatives:
 
-1. `apt install expect`
 1. `bash test.sh`
 
 
@@ -31,24 +31,22 @@ column as key.
 ## Architecture 
 
 Several OOP concepts have been used, mainly for code isolation and readability.
-1. In BoundaryTime we find all the logic and sanity checks when dealing with
-    a time boundary(the edge of a hour and minute of an schedule)
 
-2. Turn is composed of 2 BoundaryTime time attributes an takes care to check
+1. Turn is composed of 2 datetime.time attributes an takes care to check
     that a turn is actually valid (e.g. that the lower boundary is lower or equal
     than the upper boundary)
 
-3. The Employee class was created for optimization, all the ScheduleEntry
+2. The Employee class was created for optimization, all the ScheduleEntry
     objects for a particular employee will point to the same Employee object.
 
-4. The ScheduleEntry object is composed of
+3. The ScheduleEntry object is composed of
     - emp - a Employee object
     - dow - str object standing for a two-letter representation of day of the week 
     - turn - A Turn object that represents the time frame
    In this class we define the method is_encounter, which compares the current
    object with another ScheduleEntry tells whether there is an overlap or not.
 
-5. The  main program logic reside in the EmployeeEncountersParser class, which
+4. The  main program logic reside in the EmployeeEncountersParser class, which
     is composed as follows:
     Attributes:
     - entry_dict - Dictionary with two-letter keys representing the 7 days of
@@ -66,7 +64,7 @@ Several OOP concepts have been used, mainly for code isolation and readability.
     encounters/schedule overlaps between pairs of employees and storing them in
     the table attribute.
 
-6. After creation an EmployeeEncountersParser object, the user only needs to call 
+5. After creation an EmployeeEncountersParser object, the user only needs to call 
     the generate_table method, and this will fill the object's table attribute,
     which is the desired output table.
 
